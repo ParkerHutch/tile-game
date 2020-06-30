@@ -1,22 +1,21 @@
-import java.util.ArrayList;
-
-import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 // Player.java, a class for the player object in TileGame
 // Parker Hutchinson 2018
 
 public class Player extends Tile {
-	final float gravity = 1.0f; // play around with this and the setyVelocity(#) in applyInput to fine tune jumping
-	
+	final float gravity = 1.0f; // play around with this and the setyVelocity(#) in applyInput to fine tune
+								// jumping
+
 	float xVelocity = 0;
 	float yVelocity = 0;
-	
+
 	boolean falling = false;
 	boolean jumping = true;
 	boolean onGround = false;
-	Player() {}
+
+	Player() {
+	}
 
 	Player(float xCoord, float yCoord) {
 		super(xCoord, yCoord);
@@ -26,67 +25,40 @@ public class Player extends Tile {
 		super(xCoord, yCoord, sL, c);
 	}
 
-	public void tick(String key, ArrayList<Tile> map) {
+	public void tick(String key, Tile[][] map) {
 		applyInput(key);
-		//checkGroundBelow(map);
 		applyForces();
 		resolveCollisions(map);
-		
 	}
 
 	public void applyInput(String key) {
 		// use the currentKey(from the main application) to move the player
 		if (key.contains("A")) {
+			// pressing A moves the player left
 			x -= 5;
 		}
 		if (key.contains("D")) {
+			// pressing D moves the player right
 			x += 5;
 		}
 		if (key.contains("W")) {
 			// if the user presses W, make the character jump
 			if (!isJumping()) {
 				// the player can only jump if they weren't already jumping
-				setyVelocity(-10);
-				//y-= 0.01f;// remove this and only apply gravity if the player is jumping/falling
+				setyVelocity(-20);
 				setJumping(true);
 			}
-		}
-		if (key.contains("S")) {
-			//y += 5;
 		}
 	}
 
 	public void applyForces() {
 		// apply forces like gravity and velocity
 		x += getxVelocity();
-		if (isFalling() || isJumping()) {
+		if ((isFalling() || isJumping())) {
 			yVelocity += gravity;
 		}
-		y += getyVelocity();
-	}
+		y += getyVelocity(); // put this before gravity?
 
-	// I think this method can be deleted
-	public void checkGroundBelow(ArrayList<Tile> map) {
-		float playerLeftCornerX = getX();
-		float playerRightCornerX = getX() + getSideLength();
-		for (int i = 0; i < map.size(); i++) {
-			// check if either of the player's corners are inside the corners of a tile below it
-			if (
-					(playerLeftCornerX > map.get(i).getX() && playerLeftCornerX < map.get(i).getX() + map.get(i).getSideLength()) ||
-					(playerRightCornerX > map.get(i).getX() && playerRightCornerX < map.get(i).getX() + map.get(i).getSideLength()) ) {
-						// after finding the x coordinates of the tile below, check if the player is on top or inside of the tile
-						if (getY() + getSideLength() > map.get(i).getY()) {
-							setY(map.get(i).getY() - getSideLength());
-							map.get(i).setColor(Color.RED);
-						}
-						else {
-							map.get(i).setColor(Color.PURPLE);
-						}
-					}
-			else {
-				map.get(i).setColor(Color.PURPLE);
-			}
-		}
 	}
 
 	public float getxVelocity() {
@@ -104,7 +76,7 @@ public class Player extends Tile {
 	public void setyVelocity(float yVelocity) {
 		this.yVelocity = yVelocity;
 	}
-	
+
 	public boolean isFalling() {
 		return falling;
 	}
@@ -128,67 +100,64 @@ public class Player extends Tile {
 	public void setOnGround(boolean onGround) {
 		this.onGround = onGround;
 	}
-
-	public Rectangle2D getTopBounds() {
-		Rectangle2D topBounds = new Rectangle2D (
-				//getX() + getSideLength() / 8, getY(), (6 * getSideLength()) / 8, getSideLength() / 8
-				getX() + getSideLength() / 4, getY(), getSideLength() / 2, getSideLength() / 8
-				); // removing this variable might help with efficiency
-		return topBounds;
-	}
-	public Rectangle2D getRightBounds() {
-		Rectangle2D topBounds = new Rectangle2D (
-				getX() + (7 * getSideLength()) / 8, getY() + getSideLength() / 8, getSideLength() / 8, (6 * getSideLength() / 8)
-				); // removing this variable might help with efficiency
-		return topBounds;
-	}
-	public Rectangle2D getLeftBounds() {
-		Rectangle2D topBounds = new Rectangle2D (
-				getX(), getY() + getSideLength() / 8, getSideLength() / 8, (6 * getSideLength() / 8)
-				); // removing this variable might help with efficiency
-		return topBounds;
-	}
-	public Rectangle2D getBottomBounds() {
-		Rectangle2D topBounds = new Rectangle2D (
-				getX() + getSideLength() / 4, getY() + (7 * getSideLength() / 8), getSideLength() / 2, getSideLength() / 8
-				); // removing this variable might help with efficiency
-		return topBounds;
-	}
 	
-	public void resolveCollisions(ArrayList<Tile> map) {
-		for (int i = 0; i < map.size(); i++) {
-			if (getBottomBounds().intersects(map.get(i).getBounds())) {
-				// if the player is on top of(or fell into) a tile
-				resolveGroundCollision(map, i);
-			}
-			if (getRightBounds().intersects(map.get(i).getBounds())) {
-				resolveRightCollision(map, i);
-			} 
-			if (getLeftBounds().intersects(map.get(i).getBounds())) {
-				resolveLeftCollision(map, i);
-			}
-
-			else {
-				setFalling(true);
+	public void resolveCollisions(Tile[][] map) {
+		// TODO: Clean this up
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
+				if (map[i][j].getState().equals("SOLID")) {
+					
+					if (getBottomBounds().intersects(map[i][j].getBounds())) {
+						// if the player is on top of(or fell into) a tile
+						//map[i][j].setColor(Color.BLUE);
+						resolveGroundCollision(map, map[i][j]);
+						setFalling(false);
+						setOnGround(true);
+					} else {
+						setFalling(true); // if this is removed, the player can hover between blocks
+						//setOnGround(true);
+						setOnGround(false);
+						//map[i][j].setColor(Color.PURPLE);
+					}
+					
+					if (getTopBounds().intersects(map[i][j].getBounds())) {
+						setyVelocity(0);
+						setY(map[i][j].getY() + map[i][j].getSideLength());
+					}
+					
+					if (getRightBounds().intersects(map[i][j].getBounds())) {
+						resolveRightCollision(map, map[i][j]);
+					}
+					if (getLeftBounds().intersects(map[i][j].getBounds())) {
+						resolveLeftCollision(map, map[i][j]);
+					}
+					
+				}
 			}
 		}
 	}
-	
-	public void resolveGroundCollision(ArrayList<Tile> map, int mapIndex) {
-		setyVelocity(0);; // if the player should bounce, remove this and use yVelocity = -yVelocity
+
+	public void resolveGroundCollision(Tile[][] map, Tile tile) {
+		yVelocity = 0;
+		setyVelocity(0); // if the player should bounce, remove this and use yVelocity = -yVelocity
+		setY(tile.getY() - this.getSideLength() + 1);
+		// the +1 in the line above gets rid of the "player sinking" effect, but also makes it so the player is always colliding with a block
 		setFalling(false);
 		setJumping(false);
 		setOnGround(true);
-		setY(map.get(mapIndex).getY() - this.getSideLength());
 	}
 	
-	public void resolveRightCollision(ArrayList<Tile> map, int mapIndex) {
-		// set xVelocity = 0?
-		setX(map.get(mapIndex).getX() - this.getSideLength());
-	}
+	// TODO: make resolveTopCollision method
 	
-	public void resolveLeftCollision(ArrayList<Tile> map, int mapIndex) {
+	public void resolveRightCollision(Tile[][] map, Tile tile) {
 		// set xVelocity = 0?
-		setX(map.get(mapIndex).getX() + map.get(mapIndex).getSideLength()); // should fix this 
+		// maybe use if block.getState().equals("WEAPON") -> setxVelocity(block.getxVelocity()
+		setX(tile.getX() - this.getSideLength());
+	}
+
+	public void resolveLeftCollision(Tile[][] map, Tile tile) {
+		// set xVelocity = 0?
+		// maybe use if block.getState().equals("WEAPON") -> setxVelocity(block.getxVelocity()
+		setX(tile.getX() + tile.getSideLength()); // should fix this
 	}
 }
