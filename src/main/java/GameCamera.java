@@ -1,9 +1,9 @@
 public class GameCamera
 {
    private float xOffset, yOffset;
-   private TileGameV0_5Launcher game;
+   private TileGameLauncher game;
    
-   public GameCamera(TileGameV0_5Launcher game, float xOffset, float yOffset)
+   public GameCamera(TileGameLauncher game, float xOffset, float yOffset)
    {
       this.xOffset = xOffset;
       this.yOffset = yOffset;
