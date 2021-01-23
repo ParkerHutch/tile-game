@@ -2,3 +2,5 @@ bin
 .settings/org.eclipse.jdt.core.prefs
 .classpath
 .project
+target
+dependency-reduced-pom.xml
