@@ -101,8 +101,8 @@ public class TileGameLauncher extends Application implements EventHandler<KeyEve
 	Stage theStage;
 
 	// Dimensions
-	int WIDTH = 1000;
-	int HEIGHT = 900;
+	int WIDTH = 800;
+	int HEIGHT = 700;
 
 	// Useful global variables
 	Group root;
