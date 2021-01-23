@@ -1,8 +1,6 @@
 import javafx.scene.paint.Color;
 
 // World.java, a class for storing the map for TileGame
-// Parker Hutchinson
-
 public class World {
 	int displayWidth;
 	int displayHeight;

@@ -1,9 +1,8 @@
 
-// Tile.java, a class for the blocks found in the TileGame
-// Parker Hutchinson
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
+// Tile.java, a class for the blocks found in the TileGame
 public class Tile {
 
 	float x;

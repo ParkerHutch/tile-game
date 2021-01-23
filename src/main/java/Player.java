@@ -1,7 +1,6 @@
 import javafx.scene.paint.Color;
 
 // Player.java, a class for the player object in TileGame
-// Parker Hutchinson 2018
 
 public class Player extends Tile {
 	final float gravity = 1.0f; // play around with this and the setyVelocity(#) in applyInput to fine tune

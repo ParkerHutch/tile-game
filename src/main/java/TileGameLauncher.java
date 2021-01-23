@@ -1,8 +1,7 @@
 
 // TileGameLauncher.java, the main application for TileGame
-// Parker Hutchinson 2018
 // Project start date: 10/18/2018
-// TileGameV0.7 completed: 11/8/2018
+// TileGameV0.5 completed: 11/8/2018
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
