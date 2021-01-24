@@ -248,7 +248,7 @@ public class TileGameLauncher extends Application implements EventHandler<KeyEve
 	Tile[][] map;
 
 	// Settings
-	boolean drawInventoryEnabled = true;
+	boolean drawInventoryEnabled = false;
 	int minGroundDepth = 10;
 	int extraColumns = 20; // the number of columns to generate in addition to those required to fill the
 	// screen
@@ -320,8 +320,9 @@ public class TileGameLauncher extends Application implements EventHandler<KeyEve
 
 				tileWorld.loopMapColumns(map);
 
-				inventoryBarGood.update();
-				
+				if (drawInventoryEnabled) {
+					inventoryBarGood.update();
+				}
 				//updateInventoryBarTextAmounts(); // TODO Better name?
 
 				// RENDER
