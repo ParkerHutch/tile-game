@@ -1,20 +1,24 @@
+// Tile.java, a class for the blocks found in the TileGame
+import java.util.Map;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
-// Tile.java, a class for the blocks found in the TileGame
 public class Tile {
 
 	float x;
 	float y;
-	int sideLength = 25; // Tiles are squares
-
+	int sideLength = 25; // Tiles are squares, so only 1 side length needed
+	World world = new World();
+	// Color variables
 	Color color = Color.RED; // default color is red
 	Color selectedColor = Color.YELLOW; // the color when the mouse is on the tile
+	Map<String, Color> colorMap = world.getColorMap();
 
 	boolean selected = false;
 
 	String state; // as in state of matter, 3 states are SOLID, AIR, and LIQUID
+	String type; // type of block, including DIAMOND, COAL, etc.
 
 	Tile() {
 	}
@@ -97,9 +101,20 @@ public class Tile {
 		this.sideLength = sideLength;
 	}
 
-	public Color getColor() {
-		return color;
+	public Map<String, Color> getColorMap() {
+		return colorMap;
+	}
 
+	public void setColorMap(Map<String, Color> colorMap) {
+		this.colorMap = colorMap;
+	}
+
+	public Color getColor() {
+
+		if (colorMap.containsKey(getType())) {
+			color = colorMap.get(getType());
+		}
+		return color;
 	}
 
 	public void setColor(Color color) {
@@ -131,6 +146,26 @@ public class Tile {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getType() {
+		// TODO: Figure out why state is null in some of the blocks(try removing below
+		// line to see why)
+		if (state != null) {
+			if (state.equals("AIR")) {
+				type = "AIR";
+			}
+		}
+		return type;
+	}
+
+	public void setType(String type) {
+		// if the type isn't air or water, set the state to solid
+		// since the block is a solid block
+		if (!(type.equals("AIR") || type.equals("WATER"))) {
+			setState("SOLID");
+		}
+		this.type = type;
 	}
 
 	public Rectangle2D getBounds() {
