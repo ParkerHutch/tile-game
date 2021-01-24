@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>TileGame</groupId>
     <artifactId>TileGame</artifactId>
-    <version>0.5.0</version>
+    <version>0.7.0</version>
     <dependencies>
       <dependency>
         <groupId>org.openjfx</groupId>
