@@ -180,7 +180,7 @@ public class TileGameLauncher extends Application implements EventHandler<KeyEve
 	Stage theStage;
 
 	// Dimensions TODO: Use doubles to fix weird sizing issue? NOTE I think the sizing issue is actually due to window padding
-	int WIDTH = 1200;
+	int WIDTH = 800;
 	int HEIGHT = 720;
 
 	// Useful global variables
