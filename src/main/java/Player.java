@@ -1,6 +1,9 @@
-import javafx.scene.paint.Color;
-
 // Player.java, a class for the player object in TileGame
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.scene.paint.Color;
 
 public class Player extends Tile {
 	final float gravity = 1.0f; // play around with this and the setyVelocity(#) in applyInput to fine tune
@@ -12,6 +15,39 @@ public class Player extends Tile {
 	boolean falling = false;
 	boolean jumping = true;
 	boolean onGround = false;
+
+	// block types accessible to the player (ex. not "INVINCIBLE" or "AIR")
+	String[] blockTypes = { "DIRT", "COAL", "IRON", "DIAMOND", "WOOD", "LEAF" }; // TODO: Should do something like this
+																					// in the
+	// Tile class for getting color(use a for
+	// loop to get the color from a file using
+	// the array value)
+
+	Map<String, Integer> inventory = new HashMap<String, Integer>() {
+		{
+			// instantiate the inventory slots using the blockTypes array
+			// the player will have 0 of every block to start
+			for (int i = 0; i < blockTypes.length; i++) {
+				put(blockTypes[i], 0);
+			}
+		}
+	};
+
+	public String[] getBlockTypes() {
+		return blockTypes;
+	}
+
+	public void setBlockTypes(String[] blockTypes) {
+		this.blockTypes = blockTypes;
+	}
+
+	public Map<String, Integer> getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Map<String, Integer> inventory) {
+		this.inventory = inventory;
+	}
 
 	Player() {
 	}
@@ -99,38 +135,38 @@ public class Player extends Tile {
 	public void setOnGround(boolean onGround) {
 		this.onGround = onGround;
 	}
-	
+
 	public void resolveCollisions(Tile[][] map) {
 		// TODO: Clean this up
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
 				if (map[i][j].getState().equals("SOLID")) {
-					
+
 					if (getBottomBounds().intersects(map[i][j].getBounds())) {
 						// if the player is on top of(or fell into) a tile
-						//map[i][j].setColor(Color.BLUE);
+						// map[i][j].setColor(Color.BLUE);
 						resolveGroundCollision(map, map[i][j]);
 						setFalling(false);
 						setOnGround(true);
 					} else {
 						setFalling(true); // if this is removed, the player can hover between blocks
-						//setOnGround(true);
+						// setOnGround(true);
 						setOnGround(false);
-						//map[i][j].setColor(Color.PURPLE);
+						// map[i][j].setColor(Color.PURPLE);
 					}
-					
+
 					if (getTopBounds().intersects(map[i][j].getBounds())) {
 						setyVelocity(0);
 						setY(map[i][j].getY() + map[i][j].getSideLength());
 					}
-					
+
 					if (getRightBounds().intersects(map[i][j].getBounds())) {
 						resolveRightCollision(map, map[i][j]);
 					}
 					if (getLeftBounds().intersects(map[i][j].getBounds())) {
 						resolveLeftCollision(map, map[i][j]);
 					}
-					
+
 				}
 			}
 		}
@@ -140,23 +176,26 @@ public class Player extends Tile {
 		yVelocity = 0;
 		setyVelocity(0); // if the player should bounce, remove this and use yVelocity = -yVelocity
 		setY(tile.getY() - this.getSideLength() + 1);
-		// the +1 in the line above gets rid of the "player sinking" effect, but also makes it so the player is always colliding with a block
+		// the +1 in the line above gets rid of the "player sinking" effect, but also
+		// makes it so the player is always colliding with a block
 		setFalling(false);
 		setJumping(false);
 		setOnGround(true);
 	}
-	
+
 	// TODO: make resolveTopCollision method
-	
+
 	public void resolveRightCollision(Tile[][] map, Tile tile) {
 		// set xVelocity = 0?
-		// maybe use if block.getState().equals("WEAPON") -> setxVelocity(block.getxVelocity()
+		// maybe use if block.getState().equals("WEAPON") ->
+		// setxVelocity(block.getxVelocity()
 		setX(tile.getX() - this.getSideLength());
 	}
 
 	public void resolveLeftCollision(Tile[][] map, Tile tile) {
 		// set xVelocity = 0?
-		// maybe use if block.getState().equals("WEAPON") -> setxVelocity(block.getxVelocity()
+		// maybe use if block.getState().equals("WEAPON") ->
+		// setxVelocity(block.getxVelocity()
 		setX(tile.getX() + tile.getSideLength()); // should fix this
 	}
 }
